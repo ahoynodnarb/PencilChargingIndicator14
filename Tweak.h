@@ -1,5 +1,9 @@
 #import "PCIView.h"
 
+@interface UIView ()
+- (id)_viewControllerForAncestor;
+@end
+
 @interface NCNotificationShortLookView : UIView
 @property (nonatomic, strong) PCIView *indicatorView;
 @property (nonatomic, copy) NSString *primaryText;

@@ -4,8 +4,9 @@
 %property (nonatomic, strong) UIView *indicatorView;
 - (void)didMoveToWindow {
     %orig;
+    if (![[self _viewControllerForAncestor] respondsToSelector:@selector(delegate)]) return;
+    if (![[[self _viewControllerForAncestor] delegate] isKindOfClass:%c(SBNotificationBannerDestination)]) return;
     for(UIView *subview in self.subviews) {
-        if(subview == self.indicatorView) continue;
         [subview removeFromSuperview];
     }
     if(!self.indicatorView) {
@@ -13,13 +14,13 @@
         self.indicatorView.backgroundColor = UIColor.whiteColor;
         self.indicatorView.clipsToBounds = YES;
         self.indicatorView.translatesAutoresizingMaskIntoConstraints = NO;
-        self.indicatorView.layer.cornerRadius = 45;
+        self.indicatorView.layer.cornerRadius = 38;
         [self addSubview:self.indicatorView];
         [NSLayoutConstraint activateConstraints:@[
             [self.indicatorView.topAnchor constraintEqualToAnchor:self.topAnchor],
-            [self.indicatorView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor constant:55],
-            [self.indicatorView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor constant:-55],
-            [self.indicatorView.heightAnchor constraintEqualToConstant:100],
+            [self.indicatorView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor constant:80],
+            [self.indicatorView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor constant:-80],
+            [self.indicatorView.heightAnchor constraintEqualToConstant:80],
         ]];
     }
 }
