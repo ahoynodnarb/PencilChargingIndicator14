@@ -19,6 +19,5 @@
 @end
 @interface PCIChargingView : PCINotificationView
 @property (nonatomic, strong) _UIBatteryView *batteryView;
-- (instancetype)initWithTitle:(NSString *)title message:(NSString *)message;
-- (void)presentContent;
+- (instancetype)initWithTitle:(NSString *)title message:(NSString *)message backgroundType:(int)backgroundType;
 @end

@@ -8,6 +8,7 @@
 @property (nonatomic, strong) UIView *contentView;
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UILabel *messageLabel;
-- (instancetype)initWithIcon:(UIImage *)icon title:(NSString *)title message:(NSString *)message;
+@property (nonatomic, assign) int backgroundType;
+- (instancetype)initWithIcon:(UIImage *)icon title:(NSString *)title message:(NSString *)message backgroundType:(int)backgroundType;
 - (void)presentContentAnimated:(BOOL)animated;
 @end

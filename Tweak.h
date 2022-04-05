@@ -10,6 +10,7 @@
 @property (nonatomic,copy) NSString *title;
 @property (nonatomic,copy) NSString *message;
 @property (nonatomic,copy) NSString *sectionID;
+@property (nonatomic,copy) id acknowledgeAction;
 @end
 @interface BBBulletinRequest : BBBulletin
 @property (nonatomic, copy) NSString *recordID;
@@ -17,10 +18,8 @@
 @property (nonatomic, assign) BOOL showsMessagePreview;
 @end
 @interface NCNotificationRequest : NSObject
-@property (nonatomic,assign) NCMutableNotificationOptions *options;
 @property (nonatomic,copy,readonly) BBBulletin *bulletin;
 + (id)notificationRequestForBulletin:(id)arg1 observer:(id)arg2 sectionInfo:(id)arg3 feed:(unsigned long long)arg4 playLightsAndSirens:(BOOL)arg5;
--(id)initWithNotificationRequest:(id)arg1;
 @end
 @interface NCNotificationShortLookViewController : UIViewController
 @property (nonatomic, strong) PCINotificationView *indicatorView;
@@ -37,5 +36,8 @@
 @interface BNContentViewController : UIViewController
 - (void)presentPresentable:(id)arg1 withOptions:(unsigned long long)arg2 userInfo:(id)arg3;
 - (void)_dismissPresentable:(id)arg1 withReason:(id)arg2 animated:(BOOL)arg3 userInfo:(id)arg4;
-- (void)presentChargingBanner;
+// - (void)presentChargingBanner;
+- (void)presentChargingBanner:(NSNotification *)note;
 @end
+
+int backgroundType;

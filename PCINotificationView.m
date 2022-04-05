@@ -1,9 +1,11 @@
 #import "PCINotificationView.h"
 
 @implementation PCINotificationView
-- (instancetype)initWithIcon:(UIImage *)icon title:(NSString *)title message:(NSString *)message {
+- (instancetype)initWithIcon:(UIImage *)icon title:(NSString *)title message:(NSString *)message backgroundType:(int)backgroundType {
     if (self = [super init]) {
-        self.icon = [UIImage imageWithCGImage:[icon CGImage] scale:2 orientation:(icon.imageOrientation)];
+        self.layer.cornerRadius = 35;
+        self.clipsToBounds = YES;
+        self.icon = [UIImage imageWithCGImage:[icon CGImage] scale:1.6 orientation:(icon.imageOrientation)];
         self.title = title;
         self.message = message;
         self.contentView = [[UIView alloc] init];
@@ -22,17 +24,48 @@
         self.titleLabel = [[UILabel alloc] init];
         self.titleLabel.text = self.title;
         self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        self.titleLabel.textColor = UIColor.blackColor;
-        self.titleLabel.font = [UIFont boldSystemFontOfSize:16];
+        self.titleLabel.font = [UIFont boldSystemFontOfSize:20];
         self.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         [self.titleContainerView addSubview:self.titleLabel];
         self.messageLabel = [[UILabel alloc] init];
         self.messageLabel.text = self.message;
         self.messageLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        self.messageLabel.textColor = UIColor.blackColor;
-        self.messageLabel.font = [UIFont systemFontOfSize:15];
+        self.messageLabel.font = [UIFont systemFontOfSize:16];
         self.messageLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         [self.messageContainerView addSubview:self.messageLabel];
+        self.backgroundType = backgroundType;
+        if(backgroundType == 0 || backgroundType == 2) {
+            self.titleLabel.textColor = UIColor.blackColor;
+            self.messageLabel.textColor = UIColor.blackColor;
+            if(backgroundType == 2) {
+                UIVisualEffectView *blurEffectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemThinMaterialLight]];
+                [self insertSubview:blurEffectView atIndex:0];
+                blurEffectView.translatesAutoresizingMaskIntoConstraints = NO;
+                [NSLayoutConstraint activateConstraints:@[
+                    [blurEffectView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+                    [blurEffectView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
+                    [blurEffectView.topAnchor constraintEqualToAnchor:self.topAnchor],
+                    [blurEffectView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
+                ]];
+            }
+            else self.backgroundColor = UIColor.whiteColor;
+        }
+        else {
+            self.titleLabel.textColor = UIColor.whiteColor;
+            self.messageLabel.textColor = UIColor.whiteColor;
+            if(backgroundType == 3) {
+                UIVisualEffectView *blurEffectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemThinMaterialDark]];
+                [self insertSubview:blurEffectView atIndex:0];
+                blurEffectView.translatesAutoresizingMaskIntoConstraints = NO;
+                [NSLayoutConstraint activateConstraints:@[
+                    [blurEffectView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+                    [blurEffectView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
+                    [blurEffectView.topAnchor constraintEqualToAnchor:self.topAnchor],
+                    [blurEffectView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
+                ]];
+            }
+            else self.backgroundColor = UIColor.blackColor;
+        }
     }
     return self;
 }
@@ -50,7 +83,7 @@
         [self.iconImageView.topAnchor constraintEqualToAnchor:self.titleContainerView.topAnchor constant:0],
         [self.iconImageView.leadingAnchor constraintEqualToAnchor:self.titleContainerView.leadingAnchor],
         [self.iconImageView.trailingAnchor constraintEqualToAnchor:self.titleLabel.leadingAnchor constant:-5],
-        [self.messageContainerView.topAnchor constraintEqualToAnchor:self.titleLabel.bottomAnchor constant:5],
+        [self.messageContainerView.topAnchor constraintEqualToAnchor:self.titleLabel.bottomAnchor],
         [self.messageContainerView.centerXAnchor constraintEqualToAnchor:self.contentView.centerXAnchor],
         [self.messageContainerView.widthAnchor constraintLessThanOrEqualToAnchor:self.widthAnchor constant:-40],
         [self.messageLabel.topAnchor constraintEqualToAnchor:self.titleLabel.bottomAnchor constant:5],
@@ -68,12 +101,12 @@
 }
 - (void)presentContentAnimated:(BOOL)animated {
     if(animated) {
-        self.titleContainerView.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, 0, 10);
-        self.messageLabel.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, 0, 12);
-        self.messageLabel.alpha = 0.0f;
+        self.titleContainerView.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, 0, 12);
+        self.messageContainerView.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, 0, 12);
+        self.messageContainerView.alpha = 0.0f;
         [UIView animateWithDuration:0.4f delay:0.8f options:UIViewAnimationOptionCurveEaseInOut animations:^{
-            self.messageLabel.alpha = 1.0f;
-            self.messageLabel.transform = CGAffineTransformIdentity;
+            self.messageContainerView.alpha = 1.0f;
+            self.messageContainerView.transform = CGAffineTransformIdentity;
             self.titleContainerView.transform = CGAffineTransformIdentity;
         } completion:nil];
     }
