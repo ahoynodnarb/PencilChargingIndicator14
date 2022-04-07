@@ -4,8 +4,8 @@
 - (instancetype)initWithTitle:(NSString *)title message:(NSString *)message backgroundType:(int)backgroundType {
     if(self = [super initWithIcon:nil title:title message:message backgroundType:backgroundType]) {
         self.layer.cornerRadius = 30;
-        self.messageLabel.font = [UIFont boldSystemFontOfSize:15];
-        self.titleLabel.font = [UIFont boldSystemFontOfSize:16];
+        self.titleLabel.font = [UIFont boldSystemFontOfSize:14];
+        self.messageLabel.font = [UIFont boldSystemFontOfSize:13];
         _UIStatusBarBatteryItem *batteryItem = [[objc_getClass("_UIStatusBarBatteryItem") alloc] initWithIdentifier:[objc_getClass("_UIStatusBarBatteryItem") iconDisplayIdentifier] statusBar:nil];
         self.batteryView = batteryItem.batteryView;
         self.batteryView.iconSize = 5;

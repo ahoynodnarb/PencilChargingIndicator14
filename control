@@ -2,7 +2,7 @@ Package: com.popsicletreehouse.pencilchargingindicator14
 Name: PencilChargingIndicator14
 Version: 0.0.1
 Architecture: iphoneos-arm
-Description: An awesome MobileSubstrate tweak!
+Description: Add the apple pencil charging animation to your iPhone
 Maintainer: PopsicleTreehouse
 Author: PopsicleTreehouse
 Section: Tweaks

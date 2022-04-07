@@ -5,7 +5,7 @@
     if (self = [super init]) {
         self.layer.cornerRadius = 35;
         self.clipsToBounds = YES;
-        self.icon = [UIImage imageWithCGImage:[icon CGImage] scale:1.6 orientation:(icon.imageOrientation)];
+        self.icon = [UIImage imageWithCGImage:[icon CGImage] scale:2 orientation:(icon.imageOrientation)];
         self.title = title;
         self.message = message;
         self.contentView = [[UIView alloc] init];
@@ -24,7 +24,7 @@
         self.titleLabel = [[UILabel alloc] init];
         self.titleLabel.text = self.title;
         self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        self.titleLabel.font = [UIFont boldSystemFontOfSize:20];
+        self.titleLabel.font = [UIFont boldSystemFontOfSize:18];
         self.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         [self.titleContainerView addSubview:self.titleLabel];
         self.messageLabel = [[UILabel alloc] init];
