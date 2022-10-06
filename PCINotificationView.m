@@ -1,13 +1,11 @@
 #import "PCINotificationView.h"
 
 @implementation PCINotificationView
-- (instancetype)initWithIcon:(UIImage *)icon title:(NSString *)title message:(NSString *)message backgroundType:(int)backgroundType {
+- (instancetype)initWithIcon:(UIImage *)icon title:(NSString *)title message:(NSString *)message backgroundStyle:(unsigned long)backgroundStyle {
     if (self = [super init]) {
         self.layer.cornerRadius = 35;
         self.clipsToBounds = YES;
-        self.icon = [UIImage imageWithCGImage:[icon CGImage] scale:2 orientation:(icon.imageOrientation)];
-        self.title = title;
-        self.message = message;
+        self.backgroundStyle = backgroundStyle;
         self.contentView = [[UIView alloc] init];
         self.contentView.translatesAutoresizingMaskIntoConstraints = NO;
         [self addSubview:self.contentView];
@@ -17,63 +15,65 @@
         self.messageContainerView = [[UIView alloc] init];
         self.messageContainerView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.messageContainerView];
-        self.iconImageView = [[UIImageView alloc] initWithImage:self.icon];
+        self.iconImageView = [[UIImageView alloc] initWithImage:[UIImage imageWithCGImage:[icon CGImage] scale:2 orientation:(icon.imageOrientation)]];
         self.iconImageView.clipsToBounds = NO;
         self.iconImageView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.titleContainerView addSubview:self.iconImageView];
         self.titleLabel = [[UILabel alloc] init];
-        self.titleLabel.text = self.title;
+        self.titleLabel.text = title;
         self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
         self.titleLabel.font = [UIFont boldSystemFontOfSize:18];
         self.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         [self.titleContainerView addSubview:self.titleLabel];
         self.messageLabel = [[UILabel alloc] init];
-        self.messageLabel.text = self.message;
+        self.messageLabel.text = message;
         self.messageLabel.translatesAutoresizingMaskIntoConstraints = NO;
         self.messageLabel.font = [UIFont systemFontOfSize:16];
         self.messageLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         [self.messageContainerView addSubview:self.messageLabel];
-        self.backgroundType = backgroundType;
-        if(backgroundType == 0 || backgroundType == 2) {
-            self.titleLabel.textColor = UIColor.blackColor;
-            self.messageLabel.textColor = UIColor.blackColor;
-            if(backgroundType == 2) {
-                UIVisualEffectView *blurEffectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemThinMaterialLight]];
-                [self insertSubview:blurEffectView atIndex:0];
-                blurEffectView.translatesAutoresizingMaskIntoConstraints = NO;
-                [NSLayoutConstraint activateConstraints:@[
-                    [blurEffectView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
-                    [blurEffectView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
-                    [blurEffectView.topAnchor constraintEqualToAnchor:self.topAnchor],
-                    [blurEffectView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
-                ]];
-            }
-            else self.backgroundColor = UIColor.whiteColor;
+        if(backgroundStyle == PCIBackgroundStyleLight) {
+            self.titleLabel.textColor = [UIColor blackColor];
+            self.messageLabel.textColor = [UIColor blackColor];
+            self.backgroundColor = [UIColor whiteColor];
+        }
+        else if(backgroundStyle == PCIBackgroundStyleDark) {
+            self.titleLabel.textColor = [UIColor whiteColor];
+            self.messageLabel.textColor = [UIColor whiteColor];
+            self.backgroundColor = [UIColor blackColor];
+        }
+        else if(backgroundStyle == PCIBackgroundStyleLightBlurred) {
+            self.titleLabel.textColor = [UIColor blackColor];
+            self.messageLabel.textColor = [UIColor blackColor];
+            UIVisualEffectView *blurEffectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemMaterialLight]];
+            blurEffectView.translatesAutoresizingMaskIntoConstraints = NO;
+            [self insertSubview:blurEffectView atIndex:0];
+            [NSLayoutConstraint activateConstraints:@[
+                [blurEffectView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+                [blurEffectView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
+                [blurEffectView.topAnchor constraintEqualToAnchor:self.topAnchor],
+                [blurEffectView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
+            ]];
         }
         else {
-            self.titleLabel.textColor = UIColor.whiteColor;
-            self.messageLabel.textColor = UIColor.whiteColor;
-            if(backgroundType == 3) {
-                UIVisualEffectView *blurEffectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemThinMaterialDark]];
-                [self insertSubview:blurEffectView atIndex:0];
-                blurEffectView.translatesAutoresizingMaskIntoConstraints = NO;
-                [NSLayoutConstraint activateConstraints:@[
-                    [blurEffectView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
-                    [blurEffectView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
-                    [blurEffectView.topAnchor constraintEqualToAnchor:self.topAnchor],
-                    [blurEffectView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
-                ]];
-            }
-            else self.backgroundColor = UIColor.blackColor;
+            self.titleLabel.textColor = [UIColor whiteColor];
+            self.messageLabel.textColor = [UIColor whiteColor];
+            UIVisualEffectView *blurEffectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemMaterialDark]];
+            blurEffectView.translatesAutoresizingMaskIntoConstraints = NO;
+            [self insertSubview:blurEffectView atIndex:0];
+            [NSLayoutConstraint activateConstraints:@[
+                [blurEffectView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+                [blurEffectView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
+                [blurEffectView.topAnchor constraintEqualToAnchor:self.topAnchor],
+                [blurEffectView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
+            ]];
         }
     }
     return self;
 }
 - (void)setupConstraints {
-    CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
     [NSLayoutConstraint activateConstraints:@[
-        [self.widthAnchor constraintLessThanOrEqualToConstant:screenWidth-20],
         [self.widthAnchor constraintGreaterThanOrEqualToConstant:250],
+        [self.widthAnchor constraintLessThanOrEqualToAnchor:self.superview.widthAnchor constant:-20],
         [self.titleContainerView.centerXAnchor constraintEqualToAnchor:self.contentView.centerXAnchor],
         [self.titleContainerView.topAnchor constraintEqualToAnchor:self.titleLabel.topAnchor],
         [self.titleContainerView.bottomAnchor constraintEqualToAnchor:self.titleLabel.bottomAnchor],
@@ -99,7 +99,7 @@
     [super updateConstraints];
     [self setupConstraints];
 }
-- (void)presentContentAnimated:(BOOL)animated {
+- (void)presentContent:(BOOL)animated {
     if(animated) {
         self.titleContainerView.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, 0, 12);
         self.messageContainerView.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, 0, 12);

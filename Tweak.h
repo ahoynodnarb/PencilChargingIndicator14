@@ -1,3 +1,4 @@
+#import <UIKit/UIKit.h>
 #import "PCINotificationView.h"
 #import "PCIChargingView.h"
 
@@ -36,8 +37,7 @@
 @interface BNContentViewController : UIViewController
 - (void)presentPresentable:(id)arg1 withOptions:(unsigned long long)arg2 userInfo:(id)arg3;
 - (void)_dismissPresentable:(id)arg1 withReason:(id)arg2 animated:(BOOL)arg3 userInfo:(id)arg4;
-// - (void)presentChargingBanner;
 - (void)presentChargingBanner:(NSNotification *)note;
 @end
 
-int backgroundType;
+unsigned long backgroundStyle;

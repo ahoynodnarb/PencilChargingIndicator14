@@ -22,7 +22,7 @@
 			<key>label</key>
 			<string>Appearance</string>
 			<key>key</key>
-			<string>backgroundType</string>
+			<string>backgroundStyle</string>
 			<key>validValues</key>
 			<array>
 				<integer>0</integer>

@@ -2,7 +2,7 @@
 
 static void refreshPrefs() {
     NSDictionary *bundleDefaults = [[NSUserDefaults standardUserDefaults] persistentDomainForName:@"com.popsicletreehouse.pencilchargingindicator14prefs"];
-    backgroundType = [bundleDefaults objectForKey:@"backgroundType"] ? [[bundleDefaults objectForKey:@"backgroundType"] intValue] : 0;
+    backgroundStyle = [bundleDefaults objectForKey:@"backgroundStyle"] ? [[bundleDefaults objectForKey:@"backgroundStyle"] longValue] : 0;
 }
 static void presentTestBanner() {
     refreshPrefs();
@@ -14,17 +14,17 @@ static void presentTestBanner() {
 - (void)updateContent {
     %orig;
     NCNotificationShortLookView *lookView = [self valueForKey:@"_lookView"];
-    if(self.indicatorView) return;
+    if([self indicatorView]) return;
     if (![[lookView _viewControllerForAncestor] respondsToSelector:@selector(delegate)]) return;
     if (![[[lookView _viewControllerForAncestor] delegate] isKindOfClass:%c(SBNotificationBannerDestination)]) return;
-    for(UIView *subview in lookView.subviews) {
+    for(UIView *subview in [lookView subviews]) {
         [subview removeFromSuperview];
     }
-    BBBulletin *bulletin = self.notificationRequest.bulletin;
-    UIImage *icon = lookView.icons[0];
-    NSString *title = bulletin.title;
-    NSString *message = bulletin.message;
-    self.indicatorView = [[PCINotificationView alloc] initWithIcon:icon title:title message:message backgroundType:backgroundType];
+    BBBulletin *bulletin = [self.notificationRequest bulletin];
+    UIImage *icon = [lookView icons][0];
+    NSString *title = [bulletin title];
+    NSString *message = [bulletin message];
+    self.indicatorView = [[PCINotificationView alloc] initWithIcon:icon title:title message:message backgroundStyle:backgroundStyle];
     self.indicatorView.translatesAutoresizingMaskIntoConstraints = NO;
     [lookView addSubview:self.indicatorView];
     [NSLayoutConstraint activateConstraints:@[
@@ -32,7 +32,7 @@ static void presentTestBanner() {
         [self.indicatorView.centerXAnchor constraintEqualToAnchor:lookView.centerXAnchor],
         [self.indicatorView.heightAnchor constraintEqualToConstant:70],
     ]];
-    [self.indicatorView presentContentAnimated:YES];
+    [self.indicatorView presentContent:YES];
 }
 %end
 
@@ -41,11 +41,11 @@ static void presentTestBanner() {
 - (void)presentChargingBanner:(NSNotification *)note {
     UIDevice *currentDevice = [UIDevice currentDevice];
     // bad
-    if(currentDevice.batteryState != UIDeviceBatteryStateCharging && !note.userInfo) return;
+    if([currentDevice batteryState] != UIDeviceBatteryStateCharging && !note.userInfo) return;
     BBBulletinRequest *bulletin = [[%c(BBBulletinRequest) alloc] init];
-    bulletin.title = currentDevice.name;
+    bulletin.title = [currentDevice name];
     bulletin.message = [NSString stringWithFormat:@"%d%%", (int)(currentDevice.batteryLevel * 100.0f)];
-    bulletin.recordID = @"com.popsicletreehouse.notification";
+    bulletin.recordID = @"com.popsicletreehouse.chargingnotification";
     NCNotificationRequest *request = [%c(NCNotificationRequest) notificationRequestForBulletin:bulletin observer:[[%c(BBObserver) alloc] init] sectionInfo:nil feed:59 playLightsAndSirens:NO];
     NCNotificationShortLookViewController *viewController = [[%c(NCNotificationShortLookViewController) alloc] initWithNotificationRequest:request revealingAdditionalContentOnPresentation:NO];
     SBNotificationPresentableViewController *presentable = [[%c(SBNotificationPresentableViewController) alloc] initWithNotificationViewController:viewController];
@@ -55,10 +55,10 @@ static void presentTestBanner() {
     });
     NCNotificationShortLookView *lookView = [viewController valueForKey:@"_lookView"];
     presentable.view.userInteractionEnabled = NO;
-    for(UIView *subview in lookView.subviews) {
+    for(UIView *subview in [lookView subviews]) {
         [subview removeFromSuperview];
     }
-    PCIChargingView *notificationView = [[PCIChargingView alloc] initWithTitle:bulletin.title message:bulletin.message backgroundType:backgroundType];
+    PCIChargingView *notificationView = [[PCIChargingView alloc] initWithTitle:bulletin.title message:bulletin.message backgroundStyle:backgroundStyle];
     notificationView.translatesAutoresizingMaskIntoConstraints = NO;
     [lookView addSubview:notificationView];
     [NSLayoutConstraint activateConstraints:@[
@@ -66,7 +66,7 @@ static void presentTestBanner() {
         [notificationView.centerXAnchor constraintEqualToAnchor:lookView.centerXAnchor],
         [notificationView.heightAnchor constraintEqualToConstant:60],
     ]];
-    [notificationView presentContentAnimated:YES];
+    [notificationView presentContent:YES];
 }
 - (id)initWithAuthority:(id)arg1 {
     [UIDevice currentDevice].batteryMonitoringEnabled = YES;

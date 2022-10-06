@@ -1,30 +1,30 @@
 #import "PCIChargingView.h"
 
 @implementation PCIChargingView
-- (instancetype)initWithTitle:(NSString *)title message:(NSString *)message backgroundType:(int)backgroundType {
-    if(self = [super initWithIcon:nil title:title message:message backgroundType:backgroundType]) {
+- (instancetype)initWithTitle:(NSString *)title message:(NSString *)message backgroundStyle:(unsigned long)backgroundStyle {
+    if(self = [super initWithIcon:nil title:title message:message backgroundStyle:backgroundStyle]) {
         self.layer.cornerRadius = 30;
         self.titleLabel.font = [UIFont boldSystemFontOfSize:14];
         self.messageLabel.font = [UIFont boldSystemFontOfSize:13];
-        _UIStatusBarBatteryItem *batteryItem = [[objc_getClass("_UIStatusBarBatteryItem") alloc] initWithIdentifier:[objc_getClass("_UIStatusBarBatteryItem") iconDisplayIdentifier] statusBar:nil];
+        _UIStatusBarBatteryItem *batteryItem = [[objc_getClass("_UIStatusBarBatteryItem") alloc] initWithIdentifier:nil statusBar:nil];
         self.batteryView = batteryItem.batteryView;
         self.batteryView.iconSize = 5;
         self.batteryView.chargingState = 1;
-        self.batteryView.chargePercent = [UIDevice currentDevice].batteryLevel;
+        self.batteryView.chargePercent = [[UIDevice currentDevice] batteryLevel];
         self.batteryView.saverModeActive = [[NSProcessInfo processInfo] isLowPowerModeEnabled];
         self.batteryView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.messageContainerView addSubview:self.batteryView];
-        if(backgroundType == 0 || backgroundType == 2) {
-            self.messageLabel.textColor = UIColor.darkGrayColor;
-            self.batteryView.bodyColor = UIColor.darkGrayColor;
-            self.batteryView.boltColor = UIColor.blackColor;
-            self.batteryView.pinColor = UIColor.darkGrayColor;
+        if(backgroundStyle == PCIBackgroundStyleLight || backgroundStyle == PCIBackgroundStyleLightBlurred) {
+            self.messageLabel.textColor = [UIColor darkGrayColor];
+            self.batteryView.bodyColor = [UIColor darkGrayColor];
+            self.batteryView.boltColor = [UIColor blackColor];
+            self.batteryView.pinColor = [UIColor darkGrayColor];
         }
         else {
-            self.messageLabel.textColor = UIColor.whiteColor;
-            self.batteryView.boltColor = UIColor.whiteColor;
-            self.batteryView.bodyColor = UIColor.whiteColor;
-            self.batteryView.pinColor = UIColor.whiteColor;
+            self.messageLabel.textColor = [UIColor whiteColor];
+            self.batteryView.boltColor = [UIColor whiteColor];
+            self.batteryView.bodyColor = [UIColor whiteColor];
+            self.batteryView.pinColor = [UIColor whiteColor];
         }
     }
     return self;
@@ -54,7 +54,7 @@
         [self.contentView.bottomAnchor constraintEqualToAnchor:self.messageLabel.bottomAnchor],
     ]];
 }
-- (void)presentContentAnimated:(BOOL)animated {
+- (void)presentContent:(BOOL)animated {
     if(animated) {
         self.titleContainerView.transform = CGAffineTransformTranslate(CGAffineTransformMakeScale(1.2,1.2), 0, 8);
         self.messageContainerView.transform = CGAffineTransformTranslate(CGAffineTransformIdentity, 0, 12);
