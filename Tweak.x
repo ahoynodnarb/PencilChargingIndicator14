@@ -1,9 +1,11 @@
 #import "Tweak.h"
 
 static void refreshPrefs() {
-    NSDictionary *bundleDefaults = [[NSUserDefaults standardUserDefaults] persistentDomainForName:@"com.popsicletreehouse.pencilchargingindicator14prefs"];
+    NSDictionary *bundleDefaults = [[NSUserDefaults standardUserDefaults] persistentDomainForName:@"com.popsicletreehouse.pci14prefs"];
+    notificationsEnabled = [bundleDefaults objectForKey:@"notificationsEnabled"] ? [[bundleDefaults objectForKey:@"notificationsEnabled"] boolValue] : YES;
     backgroundStyle = [bundleDefaults objectForKey:@"backgroundStyle"] ? [[bundleDefaults objectForKey:@"backgroundStyle"] longValue] : 0;
 }
+
 static void presentTestBanner() {
     refreshPrefs();
     [[NSNotificationCenter defaultCenter] postNotificationName:@"presentTestBanner" object:nil userInfo:@{}];
@@ -13,8 +15,9 @@ static void presentTestBanner() {
 %property (nonatomic, strong) PCINotificationView *indicatorView;
 - (void)updateContent {
     %orig;
-    NCNotificationShortLookView *lookView = [self valueForKey:@"_lookView"];
+    if (!notificationsEnabled) return;
     if([self indicatorView]) return;
+    NCNotificationShortLookView *lookView = [self valueForKey:@"_lookView"];
     if (![[lookView _viewControllerForAncestor] respondsToSelector:@selector(delegate)]) return;
     if (![[[lookView _viewControllerForAncestor] delegate] isKindOfClass:%c(SBNotificationBannerDestination)]) return;
     for(UIView *subview in [lookView subviews]) {
@@ -49,10 +52,6 @@ static void presentTestBanner() {
     NCNotificationRequest *request = [%c(NCNotificationRequest) notificationRequestForBulletin:bulletin observer:[[%c(BBObserver) alloc] init] sectionInfo:nil feed:59 playLightsAndSirens:NO];
     NCNotificationShortLookViewController *viewController = [[%c(NCNotificationShortLookViewController) alloc] initWithNotificationRequest:request revealingAdditionalContentOnPresentation:NO];
     SBNotificationPresentableViewController *presentable = [[%c(SBNotificationPresentableViewController) alloc] initWithNotificationViewController:viewController];
-    [self presentPresentable:presentable withOptions:1 userInfo:nil];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 7 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-        [self _dismissPresentable:presentable withReason:nil animated:YES userInfo:nil];
-    });
     NCNotificationShortLookView *lookView = [viewController valueForKey:@"_lookView"];
     presentable.view.userInteractionEnabled = NO;
     for(UIView *subview in [lookView subviews]) {
@@ -67,6 +66,10 @@ static void presentTestBanner() {
         [notificationView.heightAnchor constraintEqualToConstant:60],
     ]];
     [notificationView presentContent:YES];
+    [self presentPresentable:presentable withOptions:1 userInfo:nil];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 7 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        [self _dismissPresentable:presentable withReason:nil animated:YES userInfo:nil];
+    });
 }
 - (id)initWithAuthority:(id)arg1 {
     [UIDevice currentDevice].batteryMonitoringEnabled = YES;
@@ -77,7 +80,7 @@ static void presentTestBanner() {
 %end
 
 %ctor {
-	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback) refreshPrefs, CFSTR("com.popsicletreehouse.pencilchargingindicator14.prefschanged"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
+	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback) refreshPrefs, CFSTR("com.popsicletreehouse.pci14.prefschanged"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
 	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback) presentTestBanner, CFSTR("com.popsicletreehouse.presenttestbanner"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
 	refreshPrefs();
 }

@@ -40,4 +40,5 @@
 - (void)presentChargingBanner:(NSNotification *)note;
 @end
 
+BOOL notificationsEnabled;
 unsigned long backgroundStyle;

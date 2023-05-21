@@ -4,6 +4,20 @@
 <dict>
 	<key>items</key>
 	<array>
+        <dict>
+            <key>cell</key>
+            <string>PSSwitchCell</string>
+            <key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.popsicletreehouse.pci14prefs</string>
+			<key>key</key>
+			<string>notificationsEnabled</string>
+			<key>label</key>
+			<string>Enabled for Notifications</string>
+			<key>PostNotification</key>
+			<string>com.popsicletreehouse.pci14.prefschanged</string>
+        </dict>
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
@@ -18,7 +32,7 @@
 			<key>detail</key>
 			<string>PSListItemsController</string>
 			<key>defaults</key>
-			<string>com.popsicletreehouse.pencilchargingindicator14prefs</string>
+			<string>com.popsicletreehouse.pci14prefs</string>
 			<key>label</key>
 			<string>Appearance</string>
 			<key>key</key>
